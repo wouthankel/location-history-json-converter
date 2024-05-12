@@ -4,32 +4,34 @@ This Python script takes the JSON file of your location history which you can ge
 [Google Takeout](https://takeout.google.com/settings/takeout/custom/location_history)
 and converts it into other formats.
 
-### Fork
+## Fork
 This is a fork of the original script, created by: [Scarygami](https://github.com/Scarygami).
 
-### Updated 12-5-2024
+## Updated 12-5-2024
 * Fixed deprecated function usage: DeprecationWarning: datetime.datetime.utcfromtimestamp()
+* Fixed random datetime function errors
+* Minor bugfixes due to older versions of python / deprecated functions.
 
-### Requirements
+## Requirements
 
-*  [Install python](https://wiki.python.org/moin/BeginnersGuide/Download) (3.2+) if you don't have it installed already.
-
-*  Download the python script by either cloning this repository
-   (`git clone https://github.com/Scarygami/location-history-json-converter`)
-   or [downloading the script file](https://raw.githubusercontent.com/Scarygami/location-history-json-converter/master/location_history_json_converter.py).
-
+*  [Install python](https://www.python.org/downloads/) (v3.12)
+*  Clone this repository
 *  Install dependencies using `pip install -r requirements.txt`
 
-   See below if you encounter issues installing the Shapely package
+## Usage
 
-*  Request your location history via [Google Takeout](https://takeout.google.com/settings/takeout/custom/location_history)
-   and once the package is ready, download and unzip it.
+##### Convert to .gpx
+    py location_history_json_converter.py -f gpx -s 2023-01-01 -e 2024-03-31 "/TakeoutLocation/Records.json" "/Path/To/Export/Records.gpx"
+    
+##### Convert to .kml
+    py location_history_json_converter.py -f kml -s 2023-01-01 -e 2024-03-31 "/TakeoutLocation/Records.json" "/Path/To/Export/Records.kml"
+    
+##### Convert to .csv
+    py location_history_json_converter.py -f csv -s 2023-01-01 -e 2024-03-31 "/TakeoutLocation/Records.json" "/Path/To/Export/Records.csv"
 
-   I find it easiest to place the `Location History.json` in the same folder where the script is located.
-
-### Usage
+## Parameters
 ```
-python location_history_json_converter.py input output [-h] [-f {format, see below}]
+py location_history_json_converter.py -f [filetype (optional)] -s [startdate (optional)] -e [enddate (optinal)] [input.json] [output.file] 
 
 input                Input File (Location History.json)
 output               Output File (will be overwritten!)
