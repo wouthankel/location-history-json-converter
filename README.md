@@ -1,4 +1,4 @@
-# Location History JSON Converter
+# Google Location History JSON Converter
 
 This Python script takes the JSON file of your location history which you can get via
 [Google Takeout](https://takeout.google.com/settings/takeout/custom/location_history)
