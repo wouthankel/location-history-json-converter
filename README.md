@@ -5,7 +5,7 @@ This Python script takes the JSON file of your location history which you can ge
 and converts it into other formats.
 
 ## Fork
-This is a fork of the original script, created by: [Scarygami](https://github.com/Scarygami).
+This is a fork of the original [script](https://github.com/Scarygami/location-history-json-converter), created by: [Scarygami](https://github.com/Scarygami).
 
 ## Updated 12-5-2024
 * Fixed deprecated function usage: DeprecationWarning: datetime.datetime.utcfromtimestamp()
