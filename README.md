@@ -4,6 +4,12 @@ This Python script takes the JSON file of your location history which you can ge
 [Google Takeout](https://takeout.google.com/settings/takeout/custom/location_history)
 and converts it into other formats.
 
+### Fork
+This is a fork of the original script, created by: [Scarygami](https://github.com/Scarygami).
+
+### Updated 12-5-2024
+* Fixed deprecated function usage: DeprecationWarning: datetime.datetime.utcfromtimestamp()
+
 ### Requirements
 
 *  [Install python](https://wiki.python.org/moin/BeginnersGuide/Download) (3.2+) if you don't have it installed already.
