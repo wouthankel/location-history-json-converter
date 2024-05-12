@@ -23,7 +23,7 @@ import sys
 import json
 import math
 from argparse import ArgumentParser, ArgumentTypeError
-from datetime import datetime
+from datetime import datetime, timezone
 from datetime import timedelta
 from dateutil.parser import isoparse
 from dateutil.tz import UTC
@@ -185,14 +185,14 @@ def _write_location(output, format, location, separator, first, last_location):
 
     if format == "csv":
         output.write(separator.join([
-            datetime.utcfromtimestamp(int(_get_timestampms(location)) / 1000).strftime("%Y-%m-%d %H:%M:%S"),
+            datetime.fromtimestamp(int(_get_timestampms(location)) / 1000, tz=timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
             "%.8f" % (location["latitudeE7"] / 10000000),
             "%.8f" % (location["longitudeE7"] / 10000000)
         ]) + "\n")
 
     if format == "csvfull":
         output.write(separator.join([
-            datetime.utcfromtimestamp(int(_get_timestampms(location)) / 1000).strftime("%Y-%m-%d %H:%M:%S"),
+            datetime.fromtimestamp(int(_get_timestampms(location)) / 1000, tz=timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
             "%.8f" % (location["latitudeE7"] / 10000000),
             "%.8f" % (location["longitudeE7"] / 10000000),
             str(location.get("accuracy", "")),
@@ -204,7 +204,7 @@ def _write_location(output, format, location, separator, first, last_location):
 
     if format == "csvfullest":
         output.write(separator.join([
-            datetime.utcfromtimestamp(int(_get_timestampms(location)) / 1000).strftime("%Y-%m-%d %H:%M:%S"),
+            datetime.fromtimestamp(int(_get_timestampms(location)) / 1000, tz=timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
             "%.8f" % (location["latitudeE7"] / 10000000),
             "%.8f" % (location["longitudeE7"] / 10000000),
             str(location.get("accuracy", "")),
@@ -238,7 +238,7 @@ def _write_location(output, format, location, separator, first, last_location):
 
         # Order of these tags is important to make valid KML: TimeStamp, ExtendedData, then Point
         output.write("      <TimeStamp><when>")
-        time = datetime.utcfromtimestamp(int(_get_timestampms(location)) / 1000)
+        time = datetime.fromtimestamp(int(_get_timestampms(location)) / 1000, tz=timezone.utc)
         output.write(time.strftime("%Y-%m-%dT%H:%M:%SZ"))
         output.write("</when></TimeStamp>\n")
         if "accuracy" in location or "speed" in location or "altitude" in location:
@@ -271,7 +271,7 @@ def _write_location(output, format, location, separator, first, last_location):
         if "altitude" in location:
             output.write("    <ele>%d</ele>\n" % location["altitude"])
 
-        time = datetime.utcfromtimestamp(int(_get_timestampms(location)) / 1000)
+        time = datetime.fromtimestamp(int(_get_timestampms(location)) / 1000, tz=timezone.utc)
         output.write("    <time>%s</time>\n" % time.strftime("%Y-%m-%dT%H:%M:%SZ"))
         output.write("    <desc>%s" % time.strftime("%Y-%m-%d %H:%M:%S"))
         if "accuracy" in location or "speed" in location:
@@ -313,7 +313,7 @@ def _write_location(output, format, location, separator, first, last_location):
 
         if "altitude" in location:
             output.write("        <ele>%d</ele>\n" % location["altitude"])
-        time = datetime.utcfromtimestamp(int(_get_timestampms(location)) / 1000)
+        time = datetime.fromtimestamp(int(_get_timestampms(location)) / 1000, tz=timezone.utc)
         output.write("        <time>%s</time>\n" % time.strftime("%Y-%m-%dT%H:%M:%SZ"))
         if "accuracy" in location or "speed" in location:
             output.write("        <desc>\n")
@@ -397,16 +397,20 @@ def convert(locations, output, format="kml",
     first = True
     last_loc = None
     added = 0
+    
     print("Progress:")
     for item in locations:
         if "longitudeE7" not in item or "latitudeE7" not in item or (("timestampMs" not in item) and ("timestamp" not in item)):
             continue
 
-        time = datetime.utcfromtimestamp(int(_get_timestampms(item)) / 1000)
+        time = datetime.fromtimestamp(int(_get_timestampms(item)) / 1000, tz=timezone.utc)
         print("\r%s / Locations written: %s" % (time.strftime("%Y-%m-%d %H:%M"), added), end="")
 
         if accuracy is not None and "accuracy" in item and item["accuracy"] > accuracy:
             continue
+
+        start_date = start_date.replace(tzinfo=timezone.utc)
+        end_date = end_date.replace(tzinfo=timezone.utc)
 
         if start_date is not None and start_date > time:
             continue
