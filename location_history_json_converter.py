@@ -409,8 +409,10 @@ def convert(locations, output, format="kml",
         if accuracy is not None and "accuracy" in item and item["accuracy"] > accuracy:
             continue
 
-        start_date = start_date.replace(tzinfo=timezone.utc)
-        end_date = end_date.replace(tzinfo=timezone.utc)
+        if start_date is not None:
+            start_date = start_date.replace(tzinfo=timezone.utc)
+        if end_date is not None:
+            end_date = end_date.replace(tzinfo=timezone.utc)
 
         if start_date is not None and start_date > time:
             continue
